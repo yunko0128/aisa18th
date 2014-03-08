@@ -113,6 +113,6 @@ if(isset($_POST['action'])){
 ?>
   
 </div>
-<footer>【再】第18会　アイツに差をつける会</footer>
+<footer>【再】第18会　アイツに差をつける会  </footer>
 </body>
 </html>
