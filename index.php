@@ -79,6 +79,15 @@ if(isset($_POST['action'])){
   echo '<h1>やあ</h1>';
 
 
+//------------
+//レコード数をカウント
+//------------  
+function countFunc(){
+	global $db;
+	$countRecords = $db->prepare('select count(*) from aisa18Table ');
+	$countRecords ->execute();
+	return $countRecords;
+}
 ?>
 
 <header>ヘッダー</header>
@@ -111,8 +120,17 @@ if(isset($_POST['action'])){
   }
 }
 ?>
-  
 </div>
+  
+  
+  
+<?php
+$records = countFunc();
+echo $records;
+?>
+  
+  
+  
 <footer>【再】第18会　アイツに差をつける会  </footer>
 </body>
 </html>
