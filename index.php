@@ -84,11 +84,11 @@ if(isset($_POST['action'])){
 //------------  
 function countFunc(){
 	global $db;
-	$countRecords = $db->prepare("select count(*) from 'aisa18Table'");
+	$countRecords = $db->prepare("select count(*) from aisa18Table");
  	$countRecords ->execute();
 	$row = $countRecords->fetch();
-	var_dump($row); 
-	echo '<p>'.$row.'</p>';
+  //var_dump($row); 
+	echo '<p>'.$row[0].'</p>';
 }
 $result = countFunc();
 	echo $result;
