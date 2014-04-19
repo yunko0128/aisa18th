@@ -42,11 +42,25 @@ function insertFunc($t){
 }
 
 //------------
+//パラメータ取得
+//------------
+$pal=$_GET["page"];
+$num = intval($pal);
+$min = $num*10;
+$max =$min+9;
+echo '<p>パラメータ'.$num.'</p>';
+echo '<p>'.($min+1).'件</p>';
+echo '<p>〜'.($max+1).'件</p>';
+
+
+//------------
 //DBを取得
 //------------
-function selectFunc(){
+function selectFunc($from){
 	global $db;
-	$statementObject = $db->prepare(' select * from aisa18Table');
+    error_log("from $from");
+	$statementObject = $db->prepare(' select * from aisa18Table limit 10 offset ?' );
+    $statementObject->bindValue(1,$from,PDO::PARAM_INT);
 	$statementObject->execute();
 	return $statementObject; //selectFunc()の外で使いたいので、一旦returnしとく。
 }
@@ -74,10 +88,10 @@ if(isset($_POST['action'])){
 			echo 'insert ok' . $_POST['txtForm'];
 			echo '<a href="/">back</a>';
 		}
-    }else if($action == 'delete'){
-    	deleteFunc($_POST['id']);
+		}else if($action == 'delete'){
+			deleteFunc($_POST['id']);
 		echo '<a href="/">back</a>';
-    }
+		}
 }else{
 
 
@@ -87,9 +101,9 @@ if(isset($_POST['action'])){
 function countFunc(){
 	global $db;
 	$countRecords = $db->prepare("select count(*) from aisa18Table");
- 	$countRecords ->execute();
+	$countRecords ->execute();
 	$row = $countRecords->fetch();
-  //var_dump($row); 
+	//var_dump($row); 
 	echo '<p>投稿数：'.$row[0].'</p>';
 }
 $result = countFunc();
@@ -97,33 +111,38 @@ $result = countFunc();
 ?>
 <div>
 <form method="post">
-  <input type="text" name="txtForm" size=50>
-  <input type="hidden" name="action" value="insert">
-  <input type="submit" value="投稿">
+	<input type="text" name="txtForm" size=50>
+	<input type="hidden" name="action" value="insert">
+	<input type="submit" value="投稿">
 </form>
-  
+	
 <?php
 
-  //------------
-  //表示する
-  //------------
-  $contents = selectFunc();
-  foreach($contents as $post){
-    echo '<li>' . htmlspecialchars($post['txt']) ;
+	//------------
+	//表示する
+	//------------
+	$contents = selectFunc($min);
+	foreach($contents as $post){
+		echo '<li>' . htmlspecialchars($post['txt']) ;
 ?>
 
 <form method="post">
-  <input type="hidden" name="id" value="<?php echo $post['id']; ?>" />
-  <input type="hidden" name="action" value="delete">
-  <input type="submit" value="削除">
+	<input type="hidden" name="id" value="<?php echo $post['id']; ?>" />
+	<input type="hidden" name="action" value="delete">
+	<input type="submit" value="削除">
 </form>
-    
-    
+		
+		
 <?php    
-    echo '</li>' ;
-  }
+		echo '</li>' ;
+	}
 }
 ?>
+
+
+
+
+
 </div>
 
 </body>
