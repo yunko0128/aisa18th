@@ -3,6 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+<style>
+	form{display:inline;}
+</style>
 </head>
 <body>
 <?php
@@ -32,7 +35,7 @@ $db = new PDO($dsn,DB_USER,DB_PASSWORD);
 //------------
 function insertFunc($t){
 	global $db;
-	$statementObject= $db->prepare('insert into aisa18Table(postTxt) values(?)'); // (?)：とりあえずなんか入るよ
+	$statementObject= $db->prepare('insert into aisa18Table(txt) values(?)'); // (?)：とりあえずなんか入るよ
 	$rtn=$statementObject->execute(array($t)); //array：複数列対応するため。
 	var_dump($rtn); //insertできたかチェック。trueなら入ってる。
 	var_dump($db->errorInfo()); //insertのエラーログを出す。
@@ -76,7 +79,6 @@ if(isset($_POST['action'])){
 		echo '<a href="/">back</a>';
     }
 }else{
-  echo '<h1>やあ</h1>';
 
 
 //------------
@@ -88,13 +90,11 @@ function countFunc(){
  	$countRecords ->execute();
 	$row = $countRecords->fetch();
   //var_dump($row); 
-	echo '<p>'.$row[0].'</p>';
+	echo '<p>投稿数：'.$row[0].'</p>';
 }
 $result = countFunc();
 	echo $result;
 ?>
-
-<header>ヘッダー</header>
 <div>
 <form method="post">
   <input type="text" name="txtForm" size=50>
@@ -109,11 +109,11 @@ $result = countFunc();
   //------------
   $contents = selectFunc();
   foreach($contents as $post){
-    echo '<li>' . htmlspecialchars($post['postTxt']) ;
+    echo '<li>' . htmlspecialchars($post['txt']) ;
 ?>
 
 <form method="post">
-  <input type="hidden" name="id" value="<?php echo $post['postID']; ?>" />
+  <input type="hidden" name="id" value="<?php echo $post['id']; ?>" />
   <input type="hidden" name="action" value="delete">
   <input type="submit" value="削除">
 </form>
@@ -125,9 +125,6 @@ $result = countFunc();
 }
 ?>
 </div>
-  
-  
-  
-<footer>【再】第18会　アイツに差をつける会  </footer>
+
 </body>
 </html>
